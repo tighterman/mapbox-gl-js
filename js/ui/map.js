@@ -35,7 +35,8 @@ var defaultOptions = {
     light: {
         lightAnchor: 'viewport',
         lightDirection: [-0.5, -0.3, 1.0],
-        lightColor: 'rgba(1,1,1,0.75)'
+        lightColor: 'rgba(1,1,1,1)',
+        lightIntensity: 0.75
     },
 
     minZoom: defaultMinZoom,
@@ -491,6 +492,21 @@ util.extend(Map.prototype, /** @lends Map.prototype */{
         return this;
     },
     /**
+     * Set light intensity (for use in extrusions).
+     *
+     * @param {Number} lightIntensity Intensity of extrusion lighting.
+     * @returns {Map} `this`
+     */
+    setLightIntensity: function(lightIntensity) {
+        if (typeof lightIntensity === 'number' && lightIntensity >= 0 && lightIntensity <= 1) {
+            this.painter.setLighting({
+                lightIntensity: lightIntensity
+            });
+        } else throw new Error('light.lightIntensity must be a number between 0 and 1.');
+
+        return this;
+    },
+    /**
      * Set all light properties.
      *
      * @param {Object} lightOptions Object containing any light subproperties.
@@ -500,6 +516,7 @@ util.extend(Map.prototype, /** @lends Map.prototype */{
         this.setLightAnchor(opts.lightAnchor);
         this.setLightColor(opts.lightColor);
         this.setLightDirection(opts.lightDirection);
+        this.setLightIntensity(opts.lightIntensity);
 
         return this;
     },
